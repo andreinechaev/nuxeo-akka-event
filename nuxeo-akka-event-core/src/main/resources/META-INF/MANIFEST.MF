@@ -1,0 +1,11 @@
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: .
+Manifest-Version: 1.0
+Bundle-Vendor: org.nuxeo.ecm.akka.event
+Bundle-Version: 1.0.0
+Bundle-Name: nuxeo-akka-event-core
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.nuxeo.ecm.akka.event.nuxeo-akka-event-core;singleton=true
+Nuxeo-Component: OSGI-INF/event-service-contrib.xml,
+ OSGI-INF/listeners-override-contrib.xml
+

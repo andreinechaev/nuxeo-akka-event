@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<component name="org.nuxeo.ecm.akka.event.service.AkkaEventServiceComponent" version="1.0">
+
+  <require>org.nuxeo.ecm.core.event.EventServiceComponent</require>
+  <implementation class="org.nuxeo.ecm.akka.event.service.AkkaEventServiceComponent"/>
+
+  <service>
+    <provide interface="org.nuxeo.ecm.core.event.EventService"/>
+    <provide interface="org.nuxeo.ecm.core.event.EventProducer"/>
+    <provide interface="org.nuxeo.ecm.core.event.EventServiceAdmin"/>
+  </service>
+
+  <extension-point name="listener">
+    <object class="org.nuxeo.ecm.core.event.impl.EventListenerDescriptor"/>
+  </extension-point>
+</component>
