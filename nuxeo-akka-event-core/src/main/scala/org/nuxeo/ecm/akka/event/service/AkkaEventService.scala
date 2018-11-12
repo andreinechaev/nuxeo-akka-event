@@ -2,9 +2,7 @@ package org.nuxeo.ecm.akka.event.service
 
 import java.util.concurrent.{ConcurrentHashMap, TimeUnit}
 
-import akka.actor.Actor.Receive
-import akka.actor.SupervisorStrategy.{Escalate, Restart, Resume, Stop}
-import akka.actor.{ActorRef, ActorSystem, OneForOneStrategy, Props, SupervisorStrategy}
+import akka.actor.{ActorRef, ActorSystem, Props}
 import akka.pattern.ask
 import akka.util.Timeout
 import org.apache.juli.logging.LogFactory
@@ -14,7 +12,7 @@ import org.nuxeo.ecm.core.event.impl.{EventImpl, EventListenerDescriptor, EventS
 
 import scala.collection.JavaConverters._
 import scala.collection.{concurrent, mutable}
-import scala.concurrent.{Await, duration}
+import scala.concurrent.Await
 
 class AkkaEventService extends EventServiceImpl with EventServiceAdmin {
 
@@ -26,26 +24,16 @@ class AkkaEventService extends EventServiceImpl with EventServiceAdmin {
 
   protected val listenerMapping: concurrent.Map[String, mutable.Set[String]] = new ConcurrentHashMap[String, mutable.Set[String]].asScala
 
-  def supervisorStrategy: SupervisorStrategy = {
-    OneForOneStrategy(maxNrOfRetries = 42, withinTimeRange = duration.FiniteDuration(16, TimeUnit.SECONDS)) {
-      case _: ArithmeticException => Resume
-      case _: NullPointerException => Restart
-      case _: IllegalArgumentException => Stop
-      case _: Exception => Escalate
-    }
-  }
-
-  def receive: Receive = {
-    case v: Any => log.warn(s"Supervisor got a message $v")
-  }
-
   override def addEventListener(listener: EventListenerDescriptor): Unit = {
     val name = listener.getName
-    log.error(s"Adding listener $name")
-    val actor = ess.actorOf(Props(new Basic(listener)), name=name)
+    log.info(s"Adding listener $name")
+
+    listener.initListener()
+    val l = if (listener.asEventListener() == null) listener.asPostCommitListener() else listener.asEventListener()
+    val events = listener.getEvents.asScala
+    val actor = ess.actorOf(Props(new Basic(l.getClass.getCanonicalName, enabled = listener.isEnabled, async = listener.getIsAsync, events)), name=name)
     listenerActorMap.put(name, actor)
 
-    val events = listener.getEvents.asScala
     for (e <- events) {
       listenerMapping.get(e) match {
         case Some(s) =>
@@ -58,12 +46,12 @@ class AkkaEventService extends EventServiceImpl with EventServiceAdmin {
       }
     }
 
-    log.debug("Registered event listener: " + listener.getName)
+    log.info("Registered event listener: " + listener.getName)
   }
 
   override def removeEventListener(listener: EventListenerDescriptor): Unit = {
     listenerActorMap.remove(listener.getName)
-    log.error("Unregistered event listener: " + listener.getName)
+    log.info("Unregistered event listener: " + listener.getName)
   }
 
   override def fireEvent(name: String, context: EventContext): Unit = {
@@ -83,12 +71,12 @@ class AkkaEventService extends EventServiceImpl with EventServiceAdmin {
 
   override def fireEventBundleSync(bundle: EventBundle): Unit = {
     val name = bundle.getName
-    implicit val timeout: Timeout = Timeout(500, TimeUnit.MILLISECONDS)
+    implicit val timeout: Timeout = Timeout(30, TimeUnit.SECONDS)
     fireEvent(name, bundle)(timeout)
   }
 
   def fireEvent(name: String, event: Any, sync: Boolean = true)
-               (implicit timeout: Timeout = Timeout(500, TimeUnit.MILLISECONDS)): Unit = {
+               (implicit timeout: Timeout = Timeout(30, TimeUnit.SECONDS)): Unit = {
     val listeners = listenerMapping.getOrElse(name, Set[String]())
     if (listeners.isEmpty) {
       log.warn(s"No listeners registered for $name")
@@ -117,14 +105,15 @@ class AkkaEventService extends EventServiceImpl with EventServiceAdmin {
     super.shutdown(timeout)
     val _ = ess.terminate()
 
-    for ((_, v) <- listenerMapping) {
-      for (ln <- v) {
-        listenerActorMap.get(ln) match {
-          case Some(ref) => ess.stop(ref)
-          case None => log.debug(s"Skipping $ln due to not able to find it")
-        }
-      }
-    }
+//    Looks like Akka is capable to stop all actors by itself
+//    for ((_, v) <- listenerMapping) {
+//      for (ln <- v) {
+//        listenerActorMap.get(ln) match {
+//          case Some(ref) => // ess.stop(ref)
+//          case None => log.debug(s"Skipping $ln due to not able to find it")
+//        }
+//      }
+//    }
 
     implicit val t: Timeout = Timeout(timeout, TimeUnit.MILLISECONDS)
     Await.ready(ess.whenTerminated, t.duration)

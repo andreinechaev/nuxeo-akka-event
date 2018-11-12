@@ -13,5 +13,5 @@ class AkkaEventServiceComponent extends EventServiceComponent {
     super.registerContribution(contribution, extensionPoint, contributor)
   }
 
-  override def getApplicationStartedOrder: Int = -1000
+  override def getApplicationStartedOrder: Int = -500
 }
