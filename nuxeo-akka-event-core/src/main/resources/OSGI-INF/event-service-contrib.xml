@@ -1,16 +1,24 @@
 <?xml version="1.0"?>
 <component name="org.nuxeo.ecm.akka.event.service.AkkaEventServiceComponent" version="1.0">
 
-  <require>org.nuxeo.ecm.core.event.EventServiceComponent</require>
-  <implementation class="org.nuxeo.ecm.akka.event.service.AkkaEventServiceComponent"/>
+  <extension target="org.nuxeo.ecm.core.event.EventServiceComponent" point="dispatcher">
+    <eventDispatcher name="akkaDispatcher" class="org.nuxeo.ecm.akka.event.dispatcher.AkkaEventBundleDispatcher"/>
+  </extension>
 
-  <service>
-    <provide interface="org.nuxeo.ecm.core.event.EventService"/>
-    <provide interface="org.nuxeo.ecm.core.event.EventProducer"/>
-    <provide interface="org.nuxeo.ecm.core.event.EventServiceAdmin"/>
-  </service>
+  <extension target="org.nuxeo.ecm.core.event.EventServiceComponent" point="pipe">
+    <eventPipe name="akkaPipe" class="org.nuxeo.ecm.akka.event.pipe.AkkaEventBundlePipe" priority="0"/>
+  </extension>
 
-  <extension-point name="listener">
-    <object class="org.nuxeo.ecm.core.event.impl.EventListenerDescriptor"/>
-  </extension-point>
+  <!--<require>org.nuxeo.ecm.core.event.EventServiceComponent</require>-->
+  <!--<implementation class="org.nuxeo.ecm.akka.event.service.AkkaEventServiceComponent"/>-->
+
+  <!--<service>-->
+    <!--<provide interface="org.nuxeo.ecm.core.event.EventService"/>-->
+    <!--<provide interface="org.nuxeo.ecm.core.event.EventProducer"/>-->
+    <!--<provide interface="org.nuxeo.ecm.core.event.EventServiceAdmin"/>-->
+  <!--</service>-->
+
+  <!--<extension-point name="listener">-->
+    <!--<object class="org.nuxeo.ecm.core.event.impl.EventListenerDescriptor"/>-->
+  <!--</extension-point>-->
 </component>

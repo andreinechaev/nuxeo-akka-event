@@ -1,104 +1,104 @@
 <?xml version="1.0"?>
 <component name="org.nuxeo.ecm.akka.event.listener.override">
 
-  <extension target="org.nuxeo.ecm.akka.event.service.AkkaEventServiceComponent"
-             point="listener">
-    <listener name="updateACEStatus" async="true" class="org.nuxeo.ecm.core.security.UpdateACEStatusListener">
-      <event>updateACEStatus</event>
-    </listener>
-    <listener name="mailReceivedListener" async="true"
-              postCommit="true" priority="140"
-              class="org.nuxeo.ecm.platform.mail.listener.MailEventListener">
-      <event>MailReceivedEvent</event>
-    </listener>
-    <listener name="softDeleteCleanup" async="false"
-              class="org.nuxeo.ecm.core.storage.sql.SoftDeleteCleanupListener">
-      <event>softDeleteCleanup</event>
-    </listener>
+  <!--<extension target="org.nuxeo.ecm.akka.event.service.AkkaEventServiceComponent"-->
+             <!--point="listener">-->
+    <!--<listener name="updateACEStatus" async="true" class="org.nuxeo.ecm.core.security.UpdateACEStatusListener">-->
+      <!--<event>updateACEStatus</event>-->
+    <!--</listener>-->
+    <!--<listener name="mailReceivedListener" async="true"-->
+              <!--postCommit="true" priority="140"-->
+              <!--class="org.nuxeo.ecm.platform.mail.listener.MailEventListener">-->
+      <!--<event>MailReceivedEvent</event>-->
+    <!--</listener>-->
+    <!--<listener name="softDeleteCleanup" async="false"-->
+              <!--class="org.nuxeo.ecm.core.storage.sql.SoftDeleteCleanupListener">-->
+      <!--<event>softDeleteCleanup</event>-->
+    <!--</listener>-->
 
-    <listener name="transientStoreGCTrigger" async="false" postCommit="false"
-              class="org.nuxeo.ecm.core.transientstore.TransientStorageGCTrigger">
-      <event>transientStoreGCStart</event>
-    </listener>
+    <!--<listener name="transientStoreGCTrigger" async="false" postCommit="false"-->
+              <!--class="org.nuxeo.ecm.core.transientstore.TransientStorageGCTrigger">-->
+      <!--<event>transientStoreGCStart</event>-->
+    <!--</listener>-->
 
-    <listener name="administrativeStatusChangeListener" async="false"
-              postCommit="false"
-              class="org.nuxeo.ecm.core.management.test.statuses.AdministrativeStatusChangeListener">
-      <event>serviceActivated</event>
-      <event>servicePassivated</event>
-    </listener>
+    <!--<listener name="administrativeStatusChangeListener" async="false"-->
+              <!--postCommit="false"-->
+              <!--class="org.nuxeo.ecm.core.management.test.statuses.AdministrativeStatusChangeListener">-->
+      <!--<event>serviceActivated</event>-->
+      <!--<event>servicePassivated</event>-->
+    <!--</listener>-->
 
-    <listener name="bulkLifeCycleChangeListener" async="true" postCommit="true"
-              class="org.nuxeo.ecm.core.lifecycle.event.BulkLifeCycleChangeListener">
-      <event>lifecycle_transition_event</event>
-      <event>documentUndeleted</event>
-      <event>documentCreatedByCopy</event>
-    </listener>
+    <!--<listener name="bulkLifeCycleChangeListener" async="true" postCommit="true"-->
+              <!--class="org.nuxeo.ecm.core.lifecycle.event.BulkLifeCycleChangeListener">-->
+      <!--<event>lifecycle_transition_event</event>-->
+      <!--<event>documentUndeleted</event>-->
+      <!--<event>documentCreatedByCopy</event>-->
+    <!--</listener>-->
 
-    <listener name="elasticSearchInlineListener" async="false"
-              class="org.nuxeo.elasticsearch.listener.ElasticSearchInlineListener"
-              enabled="${elasticsearch.enabled:=true}" postCommit="false" priority="500">
-      <event>beforeDocumentModification</event>
-      <event>documentCreated</event>
-      <event>documentImported</event>
-      <event>documentCreatedByCopy</event>
-      <event>documentMoved</event>
-      <event>lifecycle_transition_event</event>
-      <event>documentRestored</event>
-      <event>documentSecurityUpdated</event>
-      <event>documentRemoved</event>
-      <event>sessionSaved</event>
-      <event>documentCheckedOut</event>
-      <event>documentCheckedIn</event>
-      <event>binaryTextUpdated</event>
-      <event>documentTagUpdated</event>
-      <event>documentProxyUpdated</event>
-      <event>childrenOrderChanged</event>
-    </listener>
+    <!--<listener name="elasticSearchInlineListener" async="false"-->
+              <!--class="org.nuxeo.elasticsearch.listener.ElasticSearchInlineListener"-->
+              <!--enabled="${elasticsearch.enabled:=true}" postCommit="false" priority="500">-->
+      <!--<event>beforeDocumentModification</event>-->
+      <!--<event>documentCreated</event>-->
+      <!--<event>documentImported</event>-->
+      <!--<event>documentCreatedByCopy</event>-->
+      <!--<event>documentMoved</event>-->
+      <!--<event>lifecycle_transition_event</event>-->
+      <!--<event>documentRestored</event>-->
+      <!--<event>documentSecurityUpdated</event>-->
+      <!--<event>documentRemoved</event>-->
+      <!--<event>sessionSaved</event>-->
+      <!--<event>documentCheckedOut</event>-->
+      <!--<event>documentCheckedIn</event>-->
+      <!--<event>binaryTextUpdated</event>-->
+      <!--<event>documentTagUpdated</event>-->
+      <!--<event>documentProxyUpdated</event>-->
+      <!--<event>childrenOrderChanged</event>-->
+    <!--</listener>-->
 
-    <listener name="domainCreationListener" async="false" postCommit="true"
-              class="org.nuxeo.ecm.platform.publisher.listeners.DomainEventsListener"
-              priority="140">
-      <event>documentCreated</event>
-      <event>documentModified</event>
-      <event>documentRemoved</event>
-      <event>documentMoved</event>
-      <event>lifecycle_transition_event</event>
-    </listener>
+    <!--<listener name="domainCreationListener" async="false" postCommit="true"-->
+              <!--class="org.nuxeo.ecm.platform.publisher.listeners.DomainEventsListener"-->
+              <!--priority="140">-->
+      <!--<event>documentCreated</event>-->
+      <!--<event>documentModified</event>-->
+      <!--<event>documentRemoved</event>-->
+      <!--<event>documentMoved</event>-->
+      <!--<event>lifecycle_transition_event</event>-->
+    <!--</listener>-->
 
-    <listener name="updateThumbListener" async="true"
-              postCommit="true"
-              class="org.nuxeo.ecm.platform.thumbnail.listener.UpdateThumbnailListener"
-              priority="999">
-      <event>scheduleThumbnailUpdate</event>
-    </listener>
-    <listener name="checkBlobUpdate" async="false" postCommit="false"
-              class="org.nuxeo.ecm.platform.thumbnail.listener.CheckBlobUpdateListener"
-              priority="999">
-      <event>documentCreated</event>
-      <event>beforeDocumentModification</event>
-    </listener>
-  </extension>
+    <!--<listener name="updateThumbListener" async="true"-->
+              <!--postCommit="true"-->
+              <!--class="org.nuxeo.ecm.platform.thumbnail.listener.UpdateThumbnailListener"-->
+              <!--priority="999">-->
+      <!--<event>scheduleThumbnailUpdate</event>-->
+    <!--</listener>-->
+    <!--<listener name="checkBlobUpdate" async="false" postCommit="false"-->
+              <!--class="org.nuxeo.ecm.platform.thumbnail.listener.CheckBlobUpdateListener"-->
+              <!--priority="999">-->
+      <!--<event>documentCreated</event>-->
+      <!--<event>beforeDocumentModification</event>-->
+    <!--</listener>-->
+  <!--</extension>-->
 
-  <require>org.nuxeo.ecm.core.CoreExtensions</require>
-  <extension target="org.nuxeo.ecm.core.event.EventServiceComponent"
-             point="listener">
+  <!--<require>org.nuxeo.ecm.core.CoreExtensions</require>-->
+  <!--<extension target="org.nuxeo.ecm.core.event.EventServiceComponent"-->
+             <!--point="listener">-->
 
-    <listener name="updateACEStatus" enabled="false"/>
-    <listener name="mailReceivedListener" enabled="false"/>
-    <listener name="softDeleteCleanup" enabled="false"/>
+    <!--<listener name="updateACEStatus" enabled="false"/>-->
+    <!--<listener name="mailReceivedListener" enabled="false"/>-->
+    <!--<listener name="softDeleteCleanup" enabled="false"/>-->
 
-    <listener name="transientStoreGCTrigger" enabled="false"/>
+    <!--<listener name="transientStoreGCTrigger" enabled="false"/>-->
 
-    <listener name="administrativeStatusChangeListener" enabled="false"/>
+    <!--<listener name="administrativeStatusChangeListener" enabled="false"/>-->
 
-    <listener name="bulkLifeCycleChangeListener" enabled="false"/>
+    <!--<listener name="bulkLifeCycleChangeListener" enabled="false"/>-->
 
-    <listener name="elasticSearchInlineListener" enabled="false"/>
+    <!--<listener name="elasticSearchInlineListener" enabled="false"/>-->
 
-    <listener name="domainCreationListener" enabled="false"/>
+    <!--<listener name="domainCreationListener" enabled="false"/>-->
 
-    <listener name="updateThumbListener" enabled="false"/>
-    <listener name="checkBlobUpdate" enabled="false"/>
-  </extension>
+    <!--<listener name="updateThumbListener" enabled="false"/>-->
+    <!--<listener name="checkBlobUpdate" enabled="false"/>-->
+  <!--</extension>-->
 </component>
